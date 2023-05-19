@@ -1,0 +1,18 @@
+Trang thư viện online có 2 chức năng chính:
+(done)Chức năng Đăng ký/Đăng nhập.
+Chức năng: Thêm sách, chỉnh sửa thông tin sách và xóa sách.
+
+
+Trang chủ sẽ có 1 bảng hiển thị những sách đang có trong thư viện. Các cột của bảng bao gồm: Tiêu đề, tác giả, thể loại, ngày phát hành, số trang và 1 cột để trống ở cuối.
+Khi chưa đăng nhập, người sử dụng chỉ có thể nhìn bảng danh sách sách. Sau khi đăng nhập, người sử dụng sẽ thấy cuối mỗi hàng trong bảng có 2 nút View và Delete; 1 nút “Add Book” ở bên trên bảng sách.
+Chức năng “View” và “Add Book” sẽ sử dụng chung 1 trang như bên dưới:
+Khi “View” thì các trường (fields) thể hiện thông tin đã lưu trong CSDL của cuốn sách, các field sẽ bị xám không edit được. Sau khi bấm nút Edit ở footer thì các trường sẽ sáng lên cho phép edit, lúc này nút Edit chuyển thành nút Save.
+Khi “Add Book” thì các trường để trắng và footer chỉ hiển thị nút Add.
+
+Chức năng Đăng ký/Đăng nhập: như bình thường, lưu giữ tên, email, mật khẩu và các thông tin cá nhân khác của người sử dụng.
+
+Thực hiện validate dữ liệu:
+Tất cả các ô nhập bắt buộc (required) không được để trống, id không được trùng với id đã có trong CSDL.
+Nếu có lỗi quay trở về form nhập ban đầu và hiển thị lỗi cạnh ô nhập.
+Khi bấm Delete hiện lên cửa sổ yêu cầu người sử dụng confirm hoặc cancel.
+Đăng nhập không thành công báo lỗi, đăng kí tài khoản không được trùng username đã có trong CSDL
