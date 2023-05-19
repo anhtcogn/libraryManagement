@@ -1,24 +1,29 @@
-import React, { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Table } from "antd";
 import { Book } from "../components/Book";
-
-const dataSource = [
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-];
+import SignInModal from "../components/SignInModal";
+import { UserContext } from "../services/context";
+import { getAllBooks } from "../services/book";
 
 export const Home = () => {
+  const { user, setUser } = useContext(UserContext);
   const [visible, setVisible] = useState(false);
+  const [library, setLibrary] = useState([]);
+  const [signInOpen, setSignInOpen] = useState(false);
+
+  useEffect(() => {
+    getAllBooks().then((res) => {
+      console.log(res);
+    });
+    
+    if (user && user.username) {
+      setUser(user);
+
+      getAllBooks().then((res) => {
+        console.log(res);
+      });
+    }
+  }, [user]);
 
   const columns: any = [
     {
@@ -58,23 +63,32 @@ export const Home = () => {
         return (
           <div className="flex justify-center gap-2">
             <Button type="primary">Edit</Button>
-            <Button type="primary">Delete</Button>
+            <Button danger>Delete</Button>
           </div>
         );
       },
     },
   ];
+
+  const toggleSignInOpen = () => {
+    setSignInOpen(!signInOpen);
+  };
+
   return (
     <div className="p-4">
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end items-center mb-4">
+        <Button type="link" onClick={toggleSignInOpen}>
+          {user && user.username ? user.username : "Sign In"}
+        </Button>
         <Button type="primary" onClick={() => setVisible(true)}>
           Add
         </Button>
       </div>
-      <Table bordered dataSource={dataSource} columns={columns} />
+      <Table bordered dataSource={library} columns={columns} />
       <Modal open={visible} onCancel={() => setVisible(false)} footer={null}>
         <Book />
       </Modal>
+      <SignInModal open={signInOpen} setOpen={toggleSignInOpen} />
     </div>
   );
 };
