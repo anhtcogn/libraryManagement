@@ -8,6 +8,7 @@ import com.example.librarymanagement.payload.Message;
 import com.example.librarymanagement.repository.UserRepository;
 import com.example.librarymanagement.security.CustomUserDetails;
 import com.example.librarymanagement.service.UserService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,21 +59,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(
-                (CustomUserDetails) authentication.getPrincipal()
-        );
-
-        return LoginResponse.builder().accessToken(jwt)
-                .username(loginRequest.getUsername())
-                .tokenType("Bearer")
-                .message("Login success.").build();
+        String message = "";
+        boolean success;
+        LoginResponse loginResponse = new LoginResponse();
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.generateToken(
+                    (CustomUserDetails) authentication.getPrincipal()
+            );
+            loginResponse = LoginResponse.builder().accessToken(jwt)
+                    .username(loginRequest.getUsername())
+                    .tokenType("Bearer")
+                    .message("Login success.").build();
+            success = true;
+        } catch (Exception e) {
+            message = checkLoginAccount(loginRequest.getUsername());
+            success = false;
+        }
+        if (success) {
+            return loginResponse;
+        } else {
+            return LoginResponse.builder().message(message).build();
+        }
     }
 
     @Override
@@ -99,4 +113,13 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    public String checkLoginAccount(String username) {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) {
+            return "Tài khoản đăng nhập không hợp lệ, vui lòng kiểm tra lại";
+        } else {
+            return "Mật khẩu chưa chính xác, vui lòng kiểm tra lại";
+        }
+    }
 }
+
