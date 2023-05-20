@@ -28,17 +28,6 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
     getAllBook();
   }, []);
 
-  // const handleLogin = (values) => {
-  //   const res: any = axios.post("http://localhost:8080/user/login", values);
-  //   console.log(res)
-  //   if (res.data.statusCode === "OK") {
-  //     setUser({
-  //       isLogin: true,
-  //     });
-  //     return redirect("/");
-  //   }
-  //   message.error("Vui lòng kiểm tra lại thông tin đăng nhập!");
-  // };
   const handleLogin = async (values) => {
     try {
       const res = await axios.post("http://localhost:8080/user/login", values);
