@@ -21,6 +21,7 @@ export const Book = (props) => {
     }
   }, []);
 
+
   const handleFinish = async (values) => {
     const formData = new FormData();
     Object.keys(values).forEach((key) => {
@@ -46,6 +47,16 @@ export const Book = (props) => {
     }
     getAllBook();
   };
+  const handleSave = async () => {
+    const res = await form.validateFields();
+    console.log(res)
+    if (res?.errorFields) return;
+    form.submit();
+
+    // call api post, với đầu vào là res
+
+    setIsEdit(false);
+  }
 
   return (
     <div>
@@ -101,6 +112,7 @@ export const Book = (props) => {
             <div className="flex flex-col w-1/2">
               <label htmlFor="category">Thể loại</label>
               <Select id="category" />
+              // Call api getCategory, lên antd xem select mẫu
             </div>
           </div>
           <div className="mr-6">
@@ -128,63 +140,64 @@ export const Book = (props) => {
                 setSelectedImage(e.target.files[0]);
               }}
             />
-            <svg
-              onClick={() => {
-                setSelectedImage(null);
-              }}
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className={`${
-                selectedImage === null ? "hidden" : "block"
-              } absolute img-close-btn cursor-pointer`}
+            {!selectedImage && <svg
+                onClick={() => {
+                  setSelectedImage(null);
+                }}
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`${
+                    selectedImage === null ? "hidden" : "block"
+                } absolute img-close-btn cursor-pointer`}
             >
               <circle
-                cx="12"
-                cy="12"
-                r="11"
-                fill="#0D0C22"
-                stroke="white"
-                strokeWidth="2"
+                  cx="12"
+                  cy="12"
+                  r="11"
+                  fill="#0D0C22"
+                  stroke="white"
+                  strokeWidth="2"
               ></circle>{" "}
               <g clipPath="url(#clip0)">
                 <path
-                  d="M15.7766 8.21582L8.86487 15.1275"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                    d="M15.7766 8.21582L8.86487 15.1275"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 ></path>{" "}
                 <path
-                  d="M15.7823 15.1347L8.86487 8.21582"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                    d="M15.7823 15.1347L8.86487 8.21582"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 ></path>
               </g>{" "}
               <defs>
                 <clipPath id="clip0">
                   <rect
-                    width="10.3784"
-                    height="10.3784"
-                    fill="white"
-                    transform="translate(7.13513 6.48633)"
+                      width="10.3784"
+                      height="10.3784"
+                      fill="white"
+                      transform="translate(7.13513 6.48633)"
                   ></rect>
                 </clipPath>
               </defs>
-            </svg>
-            <img
-              className={`${
-                selectedImage === null ? "hidden" : "block"
-              } w-[300px] h-[300px] object-cover mx-auto`}
-              alt="not fount"
-              src={window.URL.createObjectURL(
-                new Blob([selectedImage], { type: "application/zip" })
-              )}
-            />
+            </svg>}
+
+            {selectedImage ?  <img
+                className={`${
+                    selectedImage === null ? "hidden" : "block"
+                } w-[300px] h-[300px] object-cover mx-auto`}
+                alt="not fount"
+                src={selectedImage}
+
+            /> : <img src="" alt="Not found"/>}
+
           </div>
         </div>
       </Form>
@@ -211,12 +224,7 @@ export const Book = (props) => {
             <Button
               type="primary"
               htmlType="submit"
-              onClick={async () => {
-                const res = await form.validateFields();
-                if (res?.errorFields) return;
-                form.submit();
-                setIsEdit(false);
-              }}
+              onClick={handleSave}
             >
               Save
             </Button>

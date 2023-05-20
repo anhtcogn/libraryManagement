@@ -39,6 +39,7 @@ const dataSource = [
 ];
 
 export const Home = () => {
+  const { getAllBook } = useApp();
   const [modal, setModal] = useState({
     visible: false,
     isAdd: false,
@@ -56,10 +57,13 @@ export const Home = () => {
     const res = await axios.delete(
       `http://localhost:8080/book/delete?id=${id}`
     );
+    if (res.data.success) {
+      getAllBook();
+    }
     if (!res.data.success)
       message.error(res.data.message || "Đã có lỗi xảy ra");
-  };
 
+  };
   const columns: any = [
     {
       title: "STT",
