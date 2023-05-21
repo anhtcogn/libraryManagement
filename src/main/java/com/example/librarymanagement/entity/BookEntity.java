@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
@@ -24,7 +25,8 @@ public class BookEntity {
     @NotEmpty
     @Column(name = "publish_date")
     private String publishDate;
-    private int pageNum;
+//    @Min(1)
+    private Integer pageNum;
     private String description;
     private String image;
 }

@@ -10,6 +10,7 @@ import com.example.librarymanagement.security.CustomUserDetails;
 import com.example.librarymanagement.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -76,7 +77,8 @@ public class UserServiceImpl implements UserService {
             loginResponse = LoginResponse.builder().accessToken(jwt)
                     .username(loginRequest.getUsername())
                     .tokenType("Bearer")
-                    .message("Login success.").build();
+                    .message("Login success.")
+                    .statusCode(HttpStatus.OK).build();
             success = true;
         } catch (Exception e) {
             message = checkLoginAccount(loginRequest.getUsername());
@@ -85,7 +87,7 @@ public class UserServiceImpl implements UserService {
         if (success) {
             return loginResponse;
         } else {
-            return LoginResponse.builder().message(message).build();
+            return LoginResponse.builder().message(message).statusCode(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
